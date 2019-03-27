@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost/laboratory?characterEncoding=utf-8
+    username: root
+    password: root
+server:
+  port: 8080
+  servlet:
+    context-path: /laboratory
+
+swagger:
+  enable: true
