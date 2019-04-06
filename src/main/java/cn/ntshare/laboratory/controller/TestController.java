@@ -1,14 +1,16 @@
 package cn.ntshare.laboratory.controller;
 
 import cn.ntshare.laboratory.model.User;
+import cn.ntshare.laboratory.util.FtpUtil;
 import cn.ntshare.laboratory.util.PropertiesUtil;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.commons.io.FileUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 
 /**
@@ -34,5 +36,23 @@ public class TestController {
     public User test(@RequestParam(value = "id", defaultValue = "111", required = false) String id,
                        @RequestParam(value = "username", defaultValue = "Tom", required = false) String username) {
         return new User(id, username);
+    }
+
+    @PostMapping("/upload/image")
+    public String upload(@RequestParam("file") MultipartFile file) throws IOException {
+        // 现将文件暂存到该路径下
+        String sysPath = "./src/main/resources/static/images/";
+        String fileName = file.getOriginalFilename();
+        File image = new File(sysPath + fileName);
+        FileUtils.copyInputStreamToFile(file.getInputStream(), image);
+        boolean result = FtpUtil.uploadImg(image);
+
+        // 删除项目中暂存的图片文件
+        image.delete();
+
+        if (result) {
+            return "文件上传成功";
+        }
+        return "文件上传失败";
     }
 }
