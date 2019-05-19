@@ -4,3 +4,4 @@ Laboratory.iml
 log/
 src/test/
 target/
+*.iml

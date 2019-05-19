@@ -1,0 +1,18 @@
+server:
+  port: 8900
+spring:
+  application:
+    name: lab-eureka
+  security:
+    user:
+      name: user
+      password: user
+eureka:
+  client:
+    # 是否向注册中心注册
+    register-with-eureka: false
+    # 是否查找注册中心的地址
+    fetch-registry: false
+    service-url:
+      defaultZone: http://127.0.0.1:${server.port}/eureka
+

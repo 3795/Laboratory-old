@@ -8,7 +8,8 @@
     <artifactId>laboratory</artifactId>
     <version>1.0</version>
     <modules>
-        <module>chapter-2</module>
+        <module>lab-eureka</module>
+        <module>lab-zuul</module>
     </modules>
     <packaging>pom</packaging>
     <name>laboratory</name>
