@@ -31,7 +31,7 @@
         <!--每天产生一个info信息日志-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>D:\Develop\JavaEE\laboratory\log\info.%d.log</fileNamePattern>
+            <fileNamePattern>D:\Develop\Java\laboratory\log\info.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
 
@@ -50,7 +50,7 @@
         <!--每天产生一个error信息日志-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>D:\Develop\JavaEE\laboratory\log\error.%d.log</fileNamePattern>
+            <fileNamePattern>D:\Develop\Java\laboratory\log\error.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
 
