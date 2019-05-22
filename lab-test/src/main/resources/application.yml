@@ -1,0 +1,29 @@
+server:
+  port: 8904
+spring:
+  application:
+    name: lab-test
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    primary:
+      jdbc-url: jdbc:mysql://127.0.0.1:3306/laboratory
+      driver-class-name: com.mysql.jdbc.Driver
+      username: root
+      password: root
+    secondary:
+      jdbc-url: jdbc:mysql://127.0.0.1:3306/test
+      driver-class-name: com.mysql.jdbc.Driver
+      username: root
+      password: root
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8900/eureka
+  instance:
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15

@@ -1,4 +1,4 @@
-package cn.ntshare.laboratory.domain;
+package cn.ntshare.laboratory.domain.slave;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,23 +7,16 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.math.BigDecimal;
 
-@NoArgsConstructor
+@Entity(name = "s_user")
 @Getter
 @Setter
-@Entity
-public class User {
+@NoArgsConstructor
+public class SUser {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private Integer id;
 
     private String username;
-
-    private String password;
-
-    private String role;
-
-    private BigDecimal amount;
 }

@@ -20,7 +20,7 @@ public class OrderController {
     @PostMapping
     public OrderDTO create(@RequestBody OrderDTO orderDTO) {
         Order order = new Order();
-        order.setAmount(orderDTO.getAmount());
+        order.setPrice(orderDTO.getPrice());
         order.setDetail(orderDTO.getDetail());
         order.setTitle(orderDTO.getTitle());
         order = orderRepository.save(order);

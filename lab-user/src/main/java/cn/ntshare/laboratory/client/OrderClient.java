@@ -2,6 +2,7 @@ package cn.ntshare.laboratory.client;
 
 import cn.ntshare.laboratory.dto.OrderDTO;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,13 +10,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(value = "lab-order", fallback = OrderClientFallback.class)
+@Primary
 public interface OrderClient {
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     OrderDTO getMyOrder(@PathVariable("id") Long id);
 
-    @PostMapping
+    @PostMapping(value = "/")
     OrderDTO create(@RequestBody OrderDTO dto);
+
+
 }
 
 @Component

@@ -4,11 +4,11 @@ import cn.ntshare.laboratory.client.OrderClient;
 import cn.ntshare.laboratory.dao.UserRepository;
 import cn.ntshare.laboratory.domain.User;
 import cn.ntshare.laboratory.dto.OrderDTO;
+import cn.ntshare.laboratory.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -21,14 +21,12 @@ public class UserController {
     @Autowired
     private OrderClient orderClient;
 
-    @PostMapping
-    public User create(@RequestBody User user) {
-        return userRepository.save(user);
-    }
+    @Autowired
+    private UserService userService;
 
-    @GetMapping
-    public List<User> getAll() {
-        return userRepository.findAll();
+    @PostMapping("/order")
+    public Boolean createOrder(@RequestBody OrderDTO orderDTO) {
+        return userService.createOrder(orderDTO);
     }
 
     @GetMapping("/info")

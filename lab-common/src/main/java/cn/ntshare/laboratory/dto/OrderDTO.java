@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @NoArgsConstructor
 @Getter
 @Setter
@@ -15,5 +17,11 @@ public class OrderDTO {
 
     private String detail;
 
-    private int amount;
+    private BigDecimal price;
+
+    public OrderDTO(String title, String detail, BigDecimal price) {
+        this.title = title;
+        this.detail = detail;
+        this.price = price;
+    }
 }
