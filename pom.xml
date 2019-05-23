@@ -14,6 +14,8 @@
         <module>lab-user</module>
         <module>lab-common</module>
         <module>lab-test</module>
+        <module>lab-config-server</module>
+        <module>lab-config-client</module>
     </modules>
     <packaging>pom</packaging>
     <name>laboratory</name>

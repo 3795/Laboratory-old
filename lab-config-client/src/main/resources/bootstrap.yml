@@ -1,0 +1,11 @@
+server:
+  port: 8906
+spring:
+  application:
+    # 这个applicationName最好和配置文件的命名一样
+    name: config-client
+  cloud:
+    config:
+      label: master
+      profile: dev
+      uri: http://localhost:8905
