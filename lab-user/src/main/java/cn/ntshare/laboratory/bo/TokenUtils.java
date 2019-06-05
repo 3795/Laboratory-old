@@ -1,5 +1,6 @@
 package cn.ntshare.laboratory.bo;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,6 +45,36 @@ public class TokenUtils {
                     .signWith(SignatureAlgorithm.HS512, this.secret)
                     .compact();
         }
+    }
+
+    /**
+     * 从Token中获取username
+     * @param token
+     * @return
+     */
+    public String getUsernameFromToken(String token) {
+        String username;
+        final Claims claims = this.getClaimsFromToken(token);
+        username = claims.getSubject();
+        return username;
+    }
+
+    /**
+     * 解析Token的主体Claims
+     * @param token
+     * @return
+     */
+    private Claims getClaimsFromToken(String token) {
+        Claims claims;
+        try {
+            claims = Jwts.parser()
+                    .setSigningKey(this.secret.getBytes("UTF-8"))
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (UnsupportedEncodingException e) {
+            claims = null;
+        }
+        return claims;
     }
 
     /**

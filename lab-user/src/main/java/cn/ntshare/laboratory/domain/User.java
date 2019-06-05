@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 
 @NoArgsConstructor
@@ -35,4 +36,8 @@ public class User {
     private Long lastPasswordChange;
 
     private BigDecimal amount;
+
+    // 拥有的权限名称
+    @Transient
+    private String auth;
 }
