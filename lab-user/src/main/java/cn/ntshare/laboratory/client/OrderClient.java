@@ -19,7 +19,6 @@ public interface OrderClient {
     @PostMapping(value = "/")
     OrderDTO create(@RequestBody OrderDTO dto);
 
-
 }
 
 @Component

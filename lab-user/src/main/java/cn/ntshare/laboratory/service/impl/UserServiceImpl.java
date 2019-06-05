@@ -29,4 +29,8 @@ public class UserServiceImpl implements UserService {
         orderClient.create(orderDTO);
         return true;
     }
+
+    public boolean login(String username, String password) {
+        return userRepository.findOneByUsernameAndPassword(username, password) != null;
+    }
 }

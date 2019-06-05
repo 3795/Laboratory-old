@@ -19,11 +19,20 @@ public class User {
     @GeneratedValue
     private Long id;
 
+    // 用户名
     private String username;
 
+    // 密码
     private String password;
 
-    private String role;
+    // 角色ID
+    private Integer roleId;
+
+    // 是否启用该账号，做黑名单
+    private Byte enable;
+
+    // 最近修改密码时间
+    private Long lastPasswordChange;
 
     private BigDecimal amount;
 }

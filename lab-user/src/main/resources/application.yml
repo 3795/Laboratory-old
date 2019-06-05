@@ -30,3 +30,6 @@ management:
       cors:
         allowed-origins: "*"
         allowed-methods: "*"
+token:
+  secret: secret
+  expiration: 604800
