@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
@@ -77,6 +78,55 @@ public class TokenUtils {
         return claims;
     }
 
+    public Boolean validateToken(String token, UserDetails userDetails) {
+        UserDetailImpl user = (UserDetailImpl) userDetails;
+        String username = this.getUsernameFromToken(token);
+        Date created = this.getCreateDateFromToken(token);
+        return (username.equals(user.getUsername()) &&
+                !(this.isTokenExpired(token)) &&
+                !(this.isCreatedBeforeLastPasswordReset(created, user.getLastPasswordRest())));
+    }
+
+    /**
+     * 获取封装在token中的时间
+     * @param token
+     * @return
+     */
+    public Date getCreateDateFromToken(String token) {
+        final Claims claims = this.getClaimsFromToken(token);
+        return new Date((Long) claims.get("created"));
+    }
+
+    /**
+     * 获取封装在token中过期时间
+     * @param token
+     * @return
+     */
+    public Date getExpirationDateFromToken(String token) {
+        final Claims claims = this.getClaimsFromToken(token);
+        return claims.getExpiration();
+    }
+
+    /**
+     * 判断Token是否过期
+     * @param token
+     * @return
+     */
+    private Boolean isTokenExpired(String token) {
+        final Date expiration = this.getExpirationDateFromToken(token);
+        return expiration.before(this.generateCurrentDate());
+    }
+
+    /**
+     * 判断token是否在最后一次修改密码之前生成的，在最后一次密码修改之前生成的token也是无效的
+     * @param created
+     * @param lastPasswordReset
+     * @return
+     */
+    private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
+        return (lastPasswordReset != null && created.before(lastPasswordReset));
+    }
+
     /**
      * 生成过期时间
      * @return
@@ -84,6 +134,7 @@ public class TokenUtils {
     private Date generateExpirationDate() {
         return new Date(System.currentTimeMillis() + Long.parseLong(this.expiration) * 1000);
     }
+
     /**
      * 获取当前时间
      * @return

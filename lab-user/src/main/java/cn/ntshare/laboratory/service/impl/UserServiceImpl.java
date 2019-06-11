@@ -23,10 +23,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public boolean createOrder(OrderDTO orderDTO) {
         User user = userRepository.findOneByUsername("imooc");
-        BigDecimal amount = user.getAmount().subtract(orderDTO.getPrice());
-        user.setAmount(amount);
-        userRepository.save(user);
-        orderClient.create(orderDTO);
+//        BigDecimal amount = user.getAmount().subtract(orderDTO.getPrice());
+//        user.setAmount(amount);
+//        userRepository.save(user);
+//        orderClient.create(orderDTO);
         return true;
     }
 

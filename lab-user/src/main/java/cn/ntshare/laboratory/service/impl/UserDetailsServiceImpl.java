@@ -1,8 +1,8 @@
 package cn.ntshare.laboratory.service.impl;
 
+import cn.ntshare.laboratory.bo.SecurityModelFactory;
 import cn.ntshare.laboratory.dao.UserRepository;
 import cn.ntshare.laboratory.domain.User;
-import com.sun.jmx.snmp.internal.SnmpSecurityModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,7 +25,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("No user found with username" + username);
         }
-//        return ;
-        return null;
+        return SecurityModelFactory.create(user);
     }
 }

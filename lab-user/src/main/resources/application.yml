@@ -33,3 +33,4 @@ management:
 token:
   secret: secret
   expiration: 604800
+  header: xxx
