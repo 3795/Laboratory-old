@@ -3,10 +3,6 @@ server:
 spring:
   application:
     name: lab-user
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/laboratory?charset=utf8
@@ -30,7 +26,8 @@ management:
       cors:
         allowed-origins: "*"
         allowed-methods: "*"
-token:
-  secret: secret
-  expiration: 604800
-  header: xxx
+mybatis:
+  type-aliases-package: cn.ntshare.laboratory.entity
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true

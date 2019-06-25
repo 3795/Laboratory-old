@@ -1,6 +1,6 @@
-package cn.ntshare.laboratory.mapper.master;
+package cn.ntshare.laboratory.mapper.slave;
 
-import cn.ntshare.laboratory.domain.MUser;
+import cn.ntshare.laboratory.domain.SUser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +11,14 @@ import java.util.List;
 
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
-public class MUserMapperTest {
+public class SUserMapperTest {
 
     @Autowired
-    private MUserMapper mUserMapper;
+    private SUserMapper sUserMapper;
 
     @Test
     public void testSelectAll() {
-        List<MUser> users = mUserMapper.selectAll();
+        List<SUser> users = sUserMapper.selectAll();
         users.forEach(e -> System.out.println(e.getUsername()));
     }
 }
