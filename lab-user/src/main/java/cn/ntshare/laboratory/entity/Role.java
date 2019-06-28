@@ -9,7 +9,7 @@ public class Role {
 
     private Integer id;
 
-    private Integer userId;
+    private String role;
 
-    private Integer roleId;
+    private String desc;
 }

@@ -5,9 +5,12 @@
         id, user_id, role_id
     </sql>
 
-    <select id="findRoleByUserId" parameterType="Integer" resultType="String">
-        select role
+    <select id="findRoleByUserId" parameterType="Integer" resultType="Role">
+        select role.id, role
         from role, user, user_role ur
         where role.id = ur.role_id and ur.user_id = user.id and user.id = #{userId}
     </select>
+
+
+
 </mapper>

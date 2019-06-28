@@ -8,9 +8,12 @@ import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
+
+// https://www.jianshu.com/p/0a5d3d07a151
 
 @RestController
 @RequestMapping("")
@@ -43,11 +46,6 @@ public class LoginController {
         return ServerResponseVO.error(ServerResponseEnum.NOT_LOGIN_IN);
     }
 
-    @GetMapping("/unauthorized")
-    public ServerResponseVO unauthorized() {
-        return ServerResponseVO.error(ServerResponseEnum.UNAUTHORIZED);
-    }
-
     @GetMapping("/test")
     public String test() {
         return "测试";
@@ -56,6 +54,12 @@ public class LoginController {
     @GetMapping("/test2")
     @RequiresRoles("admin")
     public String test2() {
+        return "测试权限";
+    }
+
+    @GetMapping("/per1")
+    @RequiresPermissions(value = {"add", "update"})
+    public String per1() {
         return "测试权限";
     }
 }
