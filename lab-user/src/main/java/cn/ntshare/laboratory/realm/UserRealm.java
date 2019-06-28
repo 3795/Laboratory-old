@@ -1,4 +1,4 @@
-package cn.ntshare.laboratory.config;
+package cn.ntshare.laboratory.realm;
 
 import cn.ntshare.laboratory.entity.Role;
 import cn.ntshare.laboratory.entity.User;

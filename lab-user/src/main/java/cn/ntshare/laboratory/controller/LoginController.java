@@ -2,6 +2,7 @@ package cn.ntshare.laboratory.controller;
 
 import cn.ntshare.laboratory.entity.User;
 import cn.ntshare.laboratory.enums.ServerResponseEnum;
+import cn.ntshare.laboratory.util.JWTUtil;
 import cn.ntshare.laboratory.vo.ServerResponseVO;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.DisabledAccountException;
@@ -29,7 +30,7 @@ public class LoginController {
             userSubject.login(token);
             // 封装返回信息
             User user = (User) userSubject.getPrincipal();
-            return ServerResponseVO.success(user);
+            return ServerResponseVO.success(JWTUtil.sign(user.getAccount(), user.getPassword()));
         } catch (UnknownAccountException e) {
             return ServerResponseVO.error(ServerResponseEnum.ACCOUNT_NOT_EXIST);
         } catch (DisabledAccountException e) {
