@@ -49,7 +49,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
             executeLogin(request, response);
             return true;
         }
-        return false;
+        return true;
     }
 
     /**
