@@ -15,3 +15,5 @@ zuul:
     user:
       path: /user/**
       serviceId: lab-user
+      sensitive-headers:
+      custom-sensitive-headers: true

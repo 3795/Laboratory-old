@@ -10,6 +10,4 @@ import org.springframework.stereotype.Repository;
 public interface UserMapper {
 
     User findByAccount(@Param("account") String account);
-
-
 }

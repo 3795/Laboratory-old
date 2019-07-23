@@ -17,6 +17,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * 负责认证用户身份和对用户进行授权
+ */
 public class UserRealm extends AuthorizingRealm {
 
     @Autowired
@@ -29,7 +32,9 @@ public class UserRealm extends AuthorizingRealm {
     private PermissionService permissionService;
 
     // 用户授权
+    @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        System.out.println("执行了一次授权");
         User user = (User) principalCollection.getPrimaryPrincipal();
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         List<Role> roleList = roleService.findRoleByUserId(user.getId());
@@ -49,12 +54,37 @@ public class UserRealm extends AuthorizingRealm {
     }
 
     // 用户认证
+    @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authToken) throws AuthenticationException {
+        System.out.println("执行了身份认证");
         UsernamePasswordToken token = (UsernamePasswordToken) authToken;
         User user = userService.findByAccount(token.getUsername());
         if (user == null) {
             return null;
         }
         return new SimpleAuthenticationInfo(user, user.getPassword(), getName());
+    }
+
+    /**
+     * 清除当前授权缓存
+     * @param principalCollection
+     */
+    @Override
+    public void clearCachedAuthorizationInfo(PrincipalCollection principalCollection) {
+        super.clearCachedAuthorizationInfo(principalCollection);
+    }
+
+    /**
+     * 清除当前用户身份认证缓存
+     * @param principalCollection
+     */
+    @Override
+    public void clearCachedAuthenticationInfo(PrincipalCollection principalCollection) {
+        super.clearCachedAuthenticationInfo(principalCollection);
+    }
+
+    @Override
+    public void clearCache(PrincipalCollection principalCollection) {
+        super.clearCache(principalCollection);
     }
 }
