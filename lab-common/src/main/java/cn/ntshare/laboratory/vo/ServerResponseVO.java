@@ -11,6 +11,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 public class ServerResponseVO<T> implements Serializable {
+
     private static final long serialVersionUID = -1005863670741860901L;
     // 响应码
     private Integer code;
@@ -62,5 +63,9 @@ public class ServerResponseVO<T> implements Serializable {
      */
     public static ServerResponseVO error(ServerResponseEnum responseCode) {
         return new ServerResponseVO(responseCode);
+    }
+
+    public static ServerResponseVO error(Integer code, String message) {
+        return new ServerResponseVO(code, message);
     }
 }

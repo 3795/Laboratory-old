@@ -16,4 +16,5 @@ public class UserExceptionHandler {
     public ServerResponseVO UnAuthorizedExceptionHandler(UnauthorizedException e) {
         return ServerResponseVO.error(ServerResponseEnum.UNAUTHORIZED);
     }
+
 }

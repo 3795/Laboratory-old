@@ -16,4 +16,10 @@ public class UserServiceImpl implements UserService {
     public User findByAccount(String account) {
         return userMapper.findByAccount(account);
     }
+
+    @Override
+    public boolean login(String account, String password) {
+        User user = userMapper.findByAccount(account);
+        return user != null && user.getPassword().equals(password);
+    }
 }

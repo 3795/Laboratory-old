@@ -7,7 +7,6 @@ import cn.ntshare.laboratory.service.RoleService;
 import cn.ntshare.laboratory.service.UserService;
 import cn.ntshare.laboratory.token.JWTToken;
 import cn.ntshare.laboratory.util.JWTUtil;
-import com.netflix.discovery.converters.Auto;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
