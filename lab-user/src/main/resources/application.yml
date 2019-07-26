@@ -30,6 +30,10 @@ management:
       cors:
         allowed-origins: "*"
         allowed-methods: "*"
+  endpoint:
+    shutdown:
+      enabled: true
+
 mybatis:
   type-aliases-package: cn.ntshare.laboratory.entity
   mapper-locations: classpath:mapper/*.xml

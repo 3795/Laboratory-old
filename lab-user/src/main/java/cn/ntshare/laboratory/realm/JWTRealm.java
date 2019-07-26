@@ -2,12 +2,14 @@ package cn.ntshare.laboratory.realm;
 
 import cn.ntshare.laboratory.entity.Role;
 import cn.ntshare.laboratory.entity.User;
+import cn.ntshare.laboratory.exception.ServerException;
 import cn.ntshare.laboratory.service.PermissionService;
 import cn.ntshare.laboratory.service.RoleService;
 import cn.ntshare.laboratory.service.UserService;
 import cn.ntshare.laboratory.token.JWTToken;
+import cn.ntshare.laboratory.token.JWTUser;
 import cn.ntshare.laboratory.util.JWTUtil;
-import org.apache.shiro.authc.AuthenticationException;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
@@ -40,7 +42,9 @@ public class JWTRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        String username = JWTUtil.getUsername(principalCollection.getPrimaryPrincipal().toString());
+        System.out.println("执行一次身份授权");
+        JWTUser jwtUser = (JWTUser) principalCollection.getPrimaryPrincipal();
+        String username = JWTUtil.getUsername(jwtUser.getToken());
         User user = userService.findByAccount(username);
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
         List<Role> roleList = roleService.findRoleByUserId(user.getId());
@@ -59,21 +63,31 @@ public class JWTRealm extends AuthorizingRealm {
     }
 
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) {
+        System.out.println("执行一次身份认证");
         String token = (String) authenticationToken.getCredentials();
-        String username = JWTUtil.getUsername(token);
+        String username = (String) authenticationToken.getPrincipal();
         if (username == null) {
-            throw new AuthenticationException("token invalid");
+            throw new ServerException("token invalid");
         }
         User user = userService.findByAccount(username);
         if (user == null) {
-            throw new AuthenticationException("User didn't existed!");
+            throw new ServerException("User didn't existed!");
         }
 
         if (!JWTUtil.verify(token, username, user.getPassword())) {
-            throw new AuthenticationException("Username or password error");
+            throw new ServerException("Username or password error");
         }
 
-        return new SimpleAuthenticationInfo(token, token, getName());
+        JWTUser jwtUser = new JWTUser();
+        try {
+            BeanUtils.copyProperties(jwtUser, user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        jwtUser.setToken(token);
+
+        return new SimpleAuthenticationInfo(jwtUser, token, getName());
     }
 }

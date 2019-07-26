@@ -30,7 +30,6 @@ public class JWTUtil {
             return true;
         } catch (Exception e) {
             log.error("token 验证失败");
-            e.printStackTrace();
             return false;
         }
     }
@@ -58,7 +57,6 @@ public class JWTUtil {
             return JWT.create().withClaim("username", username).withExpiresAt(date).sign(algorithm);
         } catch (UnsupportedEncodingException e) {
             log.error("token生成失败");
-            e.printStackTrace();
             return null;
         }
     }

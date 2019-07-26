@@ -1,8 +1,10 @@
 package cn.ntshare.laboratory.config;
 
-import cn.ntshare.laboratory.realm.UserRealm;
+import cn.ntshare.laboratory.filter.JWTFilter;
+import cn.ntshare.laboratory.realm.JWTRealm;
 import org.apache.shiro.mgt.DefaultSecurityManager;
-import org.apache.shiro.session.mgt.SessionManager;
+import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
+import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -14,6 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.Filter;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -30,34 +34,41 @@ public class ShiroConfig {
     private String redisPassword;
 
     @Bean
-    public UserRealm userRealm() {
-        UserRealm userRealm = new UserRealm();
-        // 开启缓存
-        userRealm.setCachingEnabled(true);
-        // 开启身份验证缓存，即缓存AuthenticationInfo信息
-        userRealm.setAuthenticationCachingEnabled(true);
+    public JWTRealm jwtRealm() {
+        JWTRealm jwtRealm = new JWTRealm();
+        jwtRealm.setCachingEnabled(true);
+        // 开启身份认证缓存
+        jwtRealm.setAuthenticationCachingEnabled(true);
         // 设置身份缓存名称前缀
-        userRealm.setAuthenticationCacheName("authenticationCache");
+        jwtRealm.setAuthenticationCacheName("authenticationCache");
         // 开启授权缓存
-        userRealm.setAuthorizationCachingEnabled(true);
+        jwtRealm.setAuthorizationCachingEnabled(true);
         // 这是权限缓存名称前缀
-        userRealm.setAuthorizationCacheName("authorizationCache");
-
-        return userRealm;
+        jwtRealm.setAuthorizationCacheName("authorizationCache");
+        return jwtRealm;
     }
 
     @Bean
     public DefaultWebSecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(userRealm());
+        securityManager.setRealm(jwtRealm());
+
+        // 关闭Shiro自带的Session
+        DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
+        DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
+        defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
+        subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
+        securityManager.setSubjectDAO(subjectDAO);
+
         // 使用Redis作为缓存
         securityManager.setCacheManager(redisCacheManager());
-        securityManager.setSessionManager(sessionManager());
+
         return securityManager;
     }
 
     /**
      * 路径过滤规则
+     *
      * @return
      */
     @Bean
@@ -65,14 +76,19 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
-        // 登录路由
-        shiroFilterFactoryBean.setLoginUrl("/login");
-        // 登录成功的路由
-        shiroFilterFactoryBean.setSuccessUrl("/");
+        // 添加JWT过滤器
+        Map<String, Filter> filterMap = new HashMap<>();
+        filterMap.put("jwt", new JWTFilter());
+        shiroFilterFactoryBean.setFilters(filterMap);
+
+        shiroFilterFactoryBean.setLoginUrl("/login");       // 登录路由
+        shiroFilterFactoryBean.setSuccessUrl("/");          // 登录成功的路由
+        shiroFilterFactoryBean.setUnauthorizedUrl("/login");
+
         Map<String, String> map = new LinkedHashMap<>();
-        // 有先后顺序
-        map.put("/login", "anon");
-        map.put("/**", "authc");
+        map.put("/login", "anon");      // 登录路由匿名访问
+        map.put("/401", "anon");
+        map.put("/**", "jwt");      // 其他的路由请求走jwt过滤器
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
         return shiroFilterFactoryBean;
     }
@@ -80,6 +96,7 @@ public class ShiroConfig {
     /**
      * 开启Shiro注解模式，可以在Controller中的方法上添加注解
      * 如：@
+     *
      * @param securityManager
      * @return
      */
@@ -88,13 +105,6 @@ public class ShiroConfig {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
         authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
         return authorizationAttributeSourceAdvisor;
-    }
-
-    @Bean
-    public SessionManager sessionManager() {
-        ShiroSessionManager sessionManager = new ShiroSessionManager();
-        sessionManager.setSessionDAO(redisSessionDAO());
-        return sessionManager;
     }
 
     @Bean

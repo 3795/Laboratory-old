@@ -1,5 +1,6 @@
 package cn.ntshare.laboratory.token;
 
+import cn.ntshare.laboratory.util.JWTUtil;
 import org.apache.shiro.authc.AuthenticationToken;
 
 public class JWTToken implements AuthenticationToken {
@@ -9,17 +10,21 @@ public class JWTToken implements AuthenticationToken {
     // 秘钥
     private String token;
 
+    private String username;
+
     public JWTToken(String token) {
         this.token = token;
+        this.username = JWTUtil.getUsername(token);
     }
 
     @Override
     public Object getPrincipal() {
-        return token;
+        return username;
     }
 
     @Override
     public Object getCredentials() {
         return token;
     }
+
 }

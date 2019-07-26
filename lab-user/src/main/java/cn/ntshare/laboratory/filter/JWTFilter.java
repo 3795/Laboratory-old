@@ -1,7 +1,6 @@
 package cn.ntshare.laboratory.filter;
 
 import cn.ntshare.laboratory.token.JWTToken;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,6 +9,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * 自定义的JWT过滤器
@@ -32,28 +32,33 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     }
 
     @Override
-    protected boolean executeLogin(ServletRequest request, ServletResponse response) throws AuthenticationException {
+    protected boolean executeLogin(ServletRequest request, ServletResponse response) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String authorization = httpServletRequest.getHeader("Authorization");
 
         JWTToken token = new JWTToken(authorization);
         // 提交给realm进行登录，如果错误则会抛出异常
         getSubject(request, response).login(token);
-        // 没有抛出异常则说明登录成功
         return true;
     }
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         if (isLoginAttempt(request, response)) {
-            executeLogin(request, response);
-            return true;
+            try {
+                executeLogin(request, response);
+                return true;
+            } catch (Exception e) {
+                responseLogin(request, response);
+                return false;
+            }
         }
         return true;
     }
 
     /**
      * 支持跨域
+     *
      * @param request
      * @param response
      * @return
@@ -72,5 +77,19 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
             return false;
         }
         return super.preHandle(request, response);
+    }
+
+    /**
+     * 认证失败时重定向到登录页面
+     * @param request
+     * @param response
+     */
+    private void responseLogin(ServletRequest request, ServletResponse response) {
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        try {
+            httpServletResponse.sendRedirect("/login");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
