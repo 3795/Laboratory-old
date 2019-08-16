@@ -20,13 +20,13 @@ spring:
 #      password: root
 
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://127.0.0.1:8900/eureka
-  instance:
-    lease-renewal-interval-in-seconds: 5
-    lease-expiration-duration-in-seconds: 15
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://127.0.0.1:8900/eureka
+#  instance:
+#    lease-renewal-interval-in-seconds: 5
+#    lease-expiration-duration-in-seconds: 15
 mybatis:
   type-aliases-package: cn.ntshare.laboratory.domain
   configuration:
