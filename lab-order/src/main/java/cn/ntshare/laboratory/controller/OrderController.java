@@ -1,5 +1,6 @@
 package cn.ntshare.laboratory.controller;
 
+import cn.ntshare.laboratory.component.KafkaSender;
 import cn.ntshare.laboratory.dao.OrderRepository;
 import cn.ntshare.laboratory.domain.Order;
 import cn.ntshare.laboratory.dto.OrderDTO;
@@ -16,6 +17,9 @@ public class OrderController {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private KafkaSender kafkaSender;
 
     @PostMapping
     public OrderDTO create(@RequestBody OrderDTO orderDTO) {
@@ -40,5 +44,11 @@ public class OrderController {
     @GetMapping
     public List<Order> getAll() {
         return orderRepository.findAll();
+    }
+
+    @GetMapping("kafka")
+    public String sendMessage(@RequestParam(value = "message") String message) {
+        kafkaSender.sendChannelMessage("test.topic", message);
+        return "success";
     }
 }
