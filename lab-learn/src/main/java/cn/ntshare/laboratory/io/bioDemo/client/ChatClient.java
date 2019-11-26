@@ -66,7 +66,7 @@ public class ChatClient {
             new Thread(new UserInputHandler(this)).start();
 
             // 读取服务器转发的消息
-            String msg = null;
+            String msg;
             while ((msg = receive()) != null) {
                 System.out.println(msg);
             }
