@@ -72,7 +72,7 @@ public class ChatServer {
         if (key.isAcceptable()) {       // 处理客户端连接事件
             ServerSocketChannel server = (ServerSocketChannel) key.channel();
             SocketChannel client = server.accept();
-            client.configureBlocking(false);
+            client.configureBlocking(false);        // 将阻塞式调用设置为非阻塞式调用
             client.register(selector, SelectionKey.OP_READ);        // 监听该客户端的读事件
             System.out.println(getClientName(client) + "已连接");
         } else if (key.isReadable()) {      // 客户端发送了消息
@@ -80,7 +80,7 @@ public class ChatServer {
             String fwdMsg = receive(client);        // 得到客户端发送的信息
             if (fwdMsg.isEmpty()) {     // 客户端异常
                 key.cancel();
-                selector.wakeup();
+                selector.wakeup();      // 更新selector的状态
             } else {
                 System.out.println(getClientName(client) + ":" + fwdMsg);
                 forwardMessage(client, fwdMsg);
@@ -97,6 +97,7 @@ public class ChatServer {
 
     /**
      * 向其他用户广播消息
+     *
      * @param client
      * @param fwdMsg
      */
@@ -152,10 +153,10 @@ public class ChatServer {
      */
     private String receive(SocketChannel client) throws IOException {
         rBuffer.clear();
-        // 将发送的信息读取到Buffer中
+        // 将发送的信息写到Buffer中
         while (client.read(rBuffer) > 0) {
         }
-        rBuffer.flip();     // 将读模式转换为写模式，并解码后输出
+        rBuffer.flip();     // 将写模式转换为读模式，并解码后输出
         return String.valueOf(charset.decode(rBuffer));
     }
 
