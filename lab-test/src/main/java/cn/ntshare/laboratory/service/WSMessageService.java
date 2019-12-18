@@ -12,8 +12,8 @@ public class WSMessageService {
     @Autowired
     private WebSocket webSocket;
 
-    public Boolean sendToAllTerminal(Long userId,String message){
-        log.debug("向用户{}发送的消息：{}",userId,message);
+    public Boolean sendToAllTerminal(Long userId, String message) {
+        log.debug("向用户{}发送的消息：{}", userId, message);
         return webSocket.sendMessageToUser(userId, message);
     }
 }
