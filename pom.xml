@@ -14,7 +14,6 @@
         <module>lab-user</module>
         <module>lab-common</module>
         <module>lab-test</module>
-        <module>lab-learn</module>
     </modules>
     <packaging>pom</packaging>
     <name>laboratory</name>
