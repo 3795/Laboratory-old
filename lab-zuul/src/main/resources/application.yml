@@ -1,12 +1,12 @@
 server:
-  port: 8901
+  port: 7010
 spring:
   application:
     name: lab-zuul
 eureka:
   client:
     service-url:
-      defaultZone: http://127.0.0.1:8900/eureka
+      defaultZone: http://127.0.0.1:7000/eureka
 zuul:
   routes:
     order:
