@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 @Slf4j
 public class AccessLogFilter extends ZuulFilter {
+
     @Override
     public String filterType() {
         return FilterConstants.POST_TYPE;

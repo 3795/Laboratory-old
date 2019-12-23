@@ -10,10 +10,10 @@
     <modules>
         <module>lab-eureka</module>
         <module>lab-zuul</module>
-        <module>lab-order</module>
         <module>lab-user</module>
         <module>lab-common</module>
         <module>lab-test</module>
+        <module>ad-sponsor</module>
     </modules>
     <packaging>pom</packaging>
     <name>laboratory</name>

@@ -1,9 +1,0 @@
-package cn.ntshare.laboratory.dao;
-
-import cn.ntshare.laboratory.domain.Order;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface OrderRepository extends JpaRepository<Order, Long> {
-
-    Order findOneByTitle(String title);
-}
