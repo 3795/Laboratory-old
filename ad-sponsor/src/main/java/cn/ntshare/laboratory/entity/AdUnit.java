@@ -3,7 +3,6 @@ package cn.ntshare.laboratory.entity;
 import cn.ntshare.laboratory.constant.CommonStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,7 +11,6 @@ import java.util.Date;
  * Created by Qinyi.
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "ad_unit")
