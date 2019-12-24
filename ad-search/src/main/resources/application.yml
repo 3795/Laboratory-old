@@ -1,17 +1,17 @@
 server:
-  port: 7020
+  port: 7021
   servlet:
-    path: /ad-sponsor
+    context-path: /ad-search
 spring:
   application:
-    name: ad-sponsor
+    name: ad-search
   jpa:
-    show-sql: true
+    open-in-view: true
     hibernate:
       ddl-auto: none
     properties:
       hibernate.format_sql: true
-    open-in-view: true
+    show-sql: true
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/laboratory?autoReconnect=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
     driver-class-name: com.mysql.jdbc.Driver
@@ -21,11 +21,19 @@ spring:
       max-active: 4
       min-idle: 2
       initial-size: 2
-  jackson:
-    default-property-inclusion: non_null
 eureka:
   instance:
     hostname: localhost
   client:
     service-url:
       defaultZone: http://localhost:7000/eureka/
+
+feign:
+  hystrix:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

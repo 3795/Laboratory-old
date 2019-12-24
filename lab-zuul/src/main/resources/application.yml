@@ -9,11 +9,9 @@ eureka:
       defaultZone: http://127.0.0.1:7000/eureka
 zuul:
   routes:
-    order:
-      path: /order/**
-      serviceId: lab-order
-    user:
-      path: /user/**
-      serviceId: lab-user
-      sensitive-headers:
-      custom-sensitive-headers: true
+    sponsor:
+      path: /ad-sponsor/**
+      serviceId: ad-sponsor
+      strip-prefix: false
+  prefix: /laboratory
+

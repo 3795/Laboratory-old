@@ -4,13 +4,16 @@ import cn.ntshare.laboratory.constant.Constants;
 import cn.ntshare.laboratory.dao.AdPlanRepository;
 import cn.ntshare.laboratory.dao.AdUnitRepository;
 import cn.ntshare.laboratory.dao.CreativeRepository;
+import cn.ntshare.laboratory.dao.unit_condition.AdUnitDistrictRepository;
 import cn.ntshare.laboratory.dao.unit_condition.AdUnitItRepository;
 import cn.ntshare.laboratory.dao.unit_condition.AdUnitKeywordRepository;
 import cn.ntshare.laboratory.dao.unit_condition.CreativeUnitRepository;
 import cn.ntshare.laboratory.entity.AdPlan;
 import cn.ntshare.laboratory.entity.AdUnit;
+import cn.ntshare.laboratory.entity.unit_condition.AdUnitDistrict;
 import cn.ntshare.laboratory.entity.unit_condition.AdUnitIt;
 import cn.ntshare.laboratory.entity.unit_condition.AdUnitKeyword;
+import cn.ntshare.laboratory.entity.unit_condition.CreativeUnit;
 import cn.ntshare.laboratory.exception.AdException;
 import cn.ntshare.laboratory.service.IAdUnitService;
 import cn.ntshare.laboratory.vo.*;
@@ -41,6 +44,9 @@ public class AdUnitServiceImpl implements IAdUnitService {
 
     @Autowired
     private CreativeUnitRepository creativeUnitRepository;
+
+    @Autowired
+    private AdUnitDistrictRepository unitDistrictRepository;
 
     @Override
     public AdUnitResponse createUnit(AdUnitRequest request) {
@@ -101,12 +107,47 @@ public class AdUnitServiceImpl implements IAdUnitService {
 
     @Override
     public AdUnitDistrictResponse createUnitDistrict(AdUnitDistrictRequest request) {
-        return null;
+        List<Long> unitIds = request.getUnitDistricts().stream()
+                .map(AdUnitDistrictRequest.UnitDistrict::getUnitId)
+                .collect(Collectors.toList());
+        if (!isRelatedUnitExist(unitIds)) {
+            throw new AdException(Constants.ErrorMsg.REQUEST_PARAM_ERROR);
+        }
+
+        List<AdUnitDistrict> unitDistricts = new ArrayList<>();
+        request.getUnitDistricts().forEach(d -> unitDistricts.add(
+                new AdUnitDistrict(d.getUnitId(), d.getProvince(),
+                        d.getCity())
+        ));
+        List<Long> ids = unitDistrictRepository.saveAll(unitDistricts)
+                .stream().map(AdUnitDistrict::getId)
+                .collect(Collectors.toList());
+
+        return new AdUnitDistrictResponse(ids);
     }
 
     @Override
     public CreativeUnitResponse createCreativeUnit(CreativeUnitRequest request) {
-        return null;
+        List<Long> unitIds = request.getUnitItems().stream()
+                .map(CreativeUnitRequest.CreativeUnitItem::getUnitId)
+                .collect(Collectors.toList());
+        List<Long> creativeIds = request.getUnitItems().stream()
+                .map(CreativeUnitRequest.CreativeUnitItem::getCreativeId)
+                .collect(Collectors.toList());
+
+        if (!(isRelatedUnitExist(unitIds) && isRelatedUnitExist(creativeIds))) {
+            throw new AdException(Constants.ErrorMsg.REQUEST_PARAM_ERROR);
+        }
+
+        List<CreativeUnit> creativeUnits = new ArrayList<>();
+        request.getUnitItems().forEach(i -> creativeUnits.add(new CreativeUnit(i.getCreativeId(), i.getUnitId())));
+
+        List<Long> ids = creativeUnitRepository.saveAll(creativeUnits)
+                .stream()
+                .map(CreativeUnit::getId)
+                .collect(Collectors.toList());
+
+        return new CreativeUnitResponse(ids);
     }
 
     private boolean isRelatedUnitExist(List<Long> unitIds) {
