@@ -1,6 +1,7 @@
 package cn.ntshare.laboratory.controller;
 
 import cn.ntshare.laboratory.annotation.IgnoreResponseAdvice;
+import cn.ntshare.laboratory.client.SponsorClient;
 import cn.ntshare.laboratory.vo.AdPlan;
 import cn.ntshare.laboratory.vo.CommonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,12 @@ public class AdSearchController {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private SponsorClient sponsorClient;
+
     /**
      * 使用Ribbon调用服务
+     *
      * @param userId
      * @param ids
      * @return
@@ -36,5 +41,19 @@ public class AdSearchController {
                                                @RequestParam("ids") List<Long> ids) {
         String url = String.format("http://ad-sponsor/ad-sponsor/ad_plan?userId=%d&ids=%d", userId, ids.get(0));
         return (CommonResponse<List<AdPlan>>) restTemplate.getForEntity(url, CommonResponse.class).getBody();
+    }
+
+    /**
+     * 使用feign调用微服务
+     *
+     * @param userId
+     * @param ids
+     * @return
+     */
+    @GetMapping("/feign")
+    @IgnoreResponseAdvice
+    public CommonResponse<List<AdPlan>> feign(@RequestParam("userId") Long userId,
+                                              @RequestParam("ids") List<Long> ids) {
+        return sponsorClient.getAdPlanByIds(userId, ids);
     }
 }
